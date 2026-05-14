@@ -2,6 +2,7 @@ package hejulian.ai.myapplication.ui.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,7 +49,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel()
+    viewModel: HomeViewModel = viewModel(),
+    onMenuClick: () -> Unit = {}
 ) {
     val inputText by viewModel.inputText.collectAsState()
     val inputScrollState = rememberScrollState()
@@ -71,7 +73,10 @@ fun HomeScreen(
                     .background(
                         color = Color.White,
                         shape = CircleShape
-                    ),
+                    )
+                    .clickable{
+                        onMenuClick()
+                    },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import hejulian.ai.myapplication.ui.components.InfoCard
+import hejulian.ai.myapplication.ui.home.HomeRoute
 import hejulian.ai.myapplication.ui.home.HomeScreen
 import hejulian.ai.myapplication.ui.theme.MyApplicationTheme
 
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
-                HomeScreen(modifier = Modifier.fillMaxSize())
+                HomeRoute()
             }
         }
     }
@@ -48,7 +49,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        val context = LocalContext.current
-        HomeScreen(modifier = Modifier.fillMaxSize())
+        HomeRoute()
     }
 }
