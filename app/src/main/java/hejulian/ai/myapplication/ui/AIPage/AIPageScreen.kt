@@ -1,7 +1,6 @@
-package hejulian.ai.myapplication.ui.home
+package hejulian.ai.myapplication.ui.AIPage
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,7 +27,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -37,7 +35,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -45,11 +42,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hejulian.ai.myapplication.core.logging.AppLogger
+import hejulian.ai.myapplication.core.logging.InMemoryAppLogger
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(),
+    viewModel: AIPageViewModel = viewModel(),
+    logger: AppLogger,
     onMenuClick: () -> Unit = {}
 ) {
     val inputText by viewModel.inputText.collectAsState()
@@ -145,9 +145,9 @@ fun HomeScreen(
                     .clip(CircleShape)
                     .background(
                         color = Color.White
-                    ),
+                ),
                 onClick = {
-
+                    logger.tool("AI add action tapped")
                 }
             ) {
                 Icon(
@@ -198,9 +198,14 @@ fun HomeScreen(
                     .clip(CircleShape)
                     .background(
                         color = Color.White,
-                    ),
+                ),
                 onClick = {
-
+                    val prompt = inputText.trim()
+                    if (prompt.isBlank()) {
+                        logger.warning("AI prompt send ignored", "reason=empty_input")
+                    } else {
+                        logger.info("AI prompt submit requested", "length=${prompt.length}")
+                    }
                 }
             ) {
                 Icon(
@@ -217,5 +222,5 @@ fun HomeScreen(
 @Preview(showBackground = true)
 @Composable
 fun HomeScreenView() {
-    HomeScreen()
+    HomeScreen(logger = InMemoryAppLogger())
 }

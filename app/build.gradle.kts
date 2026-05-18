@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.icons.core)
     implementation(libs.androidx.compose.icons.extended)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

@@ -1,26 +1,23 @@
-package hejulian.ai.myapplication.ui.home
+package hejulian.ai.myapplication.ui.AIPage
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
-import hejulian.ai.myapplication.ui.components.InfoCard
+import hejulian.ai.myapplication.core.logging.AppLogger
+import hejulian.ai.myapplication.core.logging.InMemoryAppLogger
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeRoute(){
+fun HomeRoute(
+    logger: AppLogger
+){
     val drawerState = rememberDrawerState(
         initialValue = DrawerValue.Closed
     )
@@ -42,7 +39,9 @@ fun HomeRoute(){
     ) {
         HomeScreen(
             modifier = Modifier.fillMaxSize(),
+            logger = logger,
             onMenuClick = {
+                logger.info("AI drawer opened")
                 scope.launch {
                     drawerState.open()
                 }
@@ -54,6 +53,6 @@ fun HomeRoute(){
 @Preview(showBackground = true)
 @Composable
 fun HomeRouteView(){
-    HomeRoute()
+    HomeRoute(logger = InMemoryAppLogger())
 }
 

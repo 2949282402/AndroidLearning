@@ -1,10 +1,10 @@
-package hejulian.ai.myapplication.ui.home
+package hejulian.ai.myapplication.ui.AIPage
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class HomeViewModel: ViewModel() {
+class AIPageViewModel: ViewModel() {
     private val _inputText = MutableStateFlow("")
     val inputText = _inputText.asStateFlow()
 
