@@ -12,29 +12,60 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
 class LogsViewModel(
-    private val logger: AppLogger
+    private val logger: AppLogger,
 ) : ViewModel() {
     private val selectedLevel = MutableStateFlow<LogLevel?>(null)
+    private val selectedIds = MutableStateFlow<Set<String>>(emptySet())
 
     val uiState: StateFlow<LogsUiState> =
-        combine(logger.logs, selectedLevel) { logs, level ->
+        combine(logger.logs, selectedLevel, selectedIds) { logs, level, ids ->
+            val filteredLogs = if (level == null) logs else logs.filter { it.level == level }
+            val validIds = ids.filterTo(mutableSetOf()) { id -> logs.any { it.id == id } }
             LogsUiState(
-                logs = if (level == null) logs else logs.filter { it.level == level },
-                selectedLevel = level
+                logs = filteredLogs,
+                selectedLevel = level,
+                selectedIds = validIds,
+                levelCounts = buildMap {
+                    put(null, logs.size)
+                    LogLevel.entries.forEach { logLevel ->
+                        put(logLevel, logs.count { it.level == logLevel })
+                    }
+                },
             )
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
-            LogsUiState()
+            LogsUiState(),
         )
 
     fun selectLevel(level: LogLevel?) {
         selectedLevel.value = level
     }
+
+    fun toggleSelection(id: String) {
+        selectedIds.value = selectedIds.value.toMutableSet().apply {
+            if (!add(id)) remove(id)
+        }
+    }
+
+    fun clearSelection() {
+        selectedIds.value = emptySet()
+    }
+
+    fun deleteSelected() {
+        logger.deleteByIds(selectedIds.value)
+        selectedIds.value = emptySet()
+    }
+
+    fun clearLogs() {
+        logger.clear()
+        selectedIds.value = emptySet()
+        selectedLevel.value = null
+    }
 }
 
 class LogsViewModelFactory(
-    private val logger: AppLogger
+    private val logger: AppLogger,
 ) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

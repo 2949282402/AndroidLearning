@@ -15,6 +15,8 @@ interface AppLogger{
     fun error(message: String, throwable: Throwable? = null, details: String? = null)
     fun service(message: String, details: String? = null)
     fun tool(message: String, details: String? = null)
+    fun clear()
+    fun deleteByIds(ids: Set<String>)
 }
 
 class InMemoryAppLogger: AppLogger{
@@ -42,6 +44,15 @@ class InMemoryAppLogger: AppLogger{
 
     override fun tool(message: String, details: String?) =
         add(LogLevel.Tool, message, details)
+
+    override fun clear() {
+        _logs.value = emptyList()
+    }
+
+    override fun deleteByIds(ids: Set<String>) {
+        if (ids.isEmpty()) return
+        _logs.update { items -> items.filterNot { it.id in ids } }
+    }
 
     private fun add(level: LogLevel, message: String, details: String?) {
         val item = AppLog(

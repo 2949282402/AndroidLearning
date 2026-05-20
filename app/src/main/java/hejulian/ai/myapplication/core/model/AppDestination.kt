@@ -15,7 +15,7 @@ enum class AppDestination(
 ){
     Ai("ai",            "AI",       Icons.Outlined.SmartToy),
     Servers("servers",  "Servers",  Icons.Outlined.Storage),
-    Sftp("sftp",        "Sftp",     Icons.Outlined.Folder),
+    Sftp("sftp",        "SFTP",     Icons.Outlined.Folder),
     Monitor("monitor",  "Monitor",  Icons.Outlined.Memory),
     Logs("logs",        "Logs",     Icons.Outlined.Terminal)
 }
